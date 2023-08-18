@@ -1,24 +1,32 @@
 package ee.example.demo.controller;
 
-import ee.example.demo.domain.Customer;
+import ee.example.demo.domain.CustomerDAO;
+import ee.example.demo.domain.CustomerDTO;
+import ee.example.demo.domain.CustomerService;
+import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor
 public class CustomerController {
 
+    @Resource
+    private CustomerService customerService;
+
     @PostMapping
-    public String save(@RequestBody Customer customer) {
-        System.out.println("Customer " + customer.getLastName() + " added");
-        return "Customer " + customer.getFirstName() + " saved to db.";
+    public CustomerDAO save(@RequestBody CustomerDTO customerDTO) {
+
+        return customerService.save(customerDTO);
     }
 
     @GetMapping
-    public List<Customer> getAll() {
+    public List<CustomerDTO> getAll() {
         System.out.println("Get all customers.");
-        return List.of(new Customer(1, "Oleg", "Petrov"));
+        return List.of(new CustomerDTO( "Oleg", "Petrov"));
     }
 
     @PutMapping
@@ -35,8 +43,8 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer getById(@PathVariable int id) {
+    public CustomerDTO getById(@PathVariable int id) {
         System.out.println("Get customer with id = " + id);
-        return new Customer(1,"Oleg", "Sidorov");
+        return new CustomerDTO("Oleg", "Sidorov");
     }
 }
